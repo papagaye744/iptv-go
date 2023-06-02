@@ -1,4 +1,3 @@
-// Package api
 package api
 
 import (
@@ -16,21 +15,19 @@ type Response struct {
 }
 
 func returnJson(w http.ResponseWriter, code int, message string) {
-  // 返回数据
   resp := Response {
     Code: code,
     Message: message
   }
-  // 格式化为json字符串
+
   json, err := json.Marshal(resp)
   if err != nil {
     log.Println("Failed to encode JSON:", err)
     http.Error(w, "Internal Server Error", http.StatusInternalServerError)
     return
   }
-  // 设置响应头
+
   w.Header().Set("Content-Type", "application/json")
-  // 写入json
   w.Write(json)
 }
 
@@ -52,15 +49,11 @@ func duanyan(adurl string, realurl any) string {
 	return liveurl
 }
 
-// vercel 平台会将请求传递给该函数，这个函数名随意，但函数参数必须按照该规则。
 func Live(w http.ResponseWriter, r *http.Request)  {
     path := r.URL.Path
     params := strings.Split(path, "/")
     if len(params) >= 3 {
-      // 解析成功
-      // 直播平台
       platform := params[1]
-      // 房间号
       rid := params[2]
       switch platform {
       case "douyin":
