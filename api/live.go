@@ -42,6 +42,16 @@ func defaultQuery(r *http.Request, name string, defaultValue string) string {
   return param
 }
 
+func duanyan(adurl string, realurl any) string {
+	var liveurl string
+	if str, ok := realurl.(string); ok {
+		liveurl = str
+	} else {
+		liveurl = adurl
+	}
+	return liveurl
+}
+
 // vercel 平台会将请求传递给该函数，这个函数名随意，但函数参数必须按照该规则。
 func Live(w http.ResponseWriter, r *http.Request)  {
     path := r.URL.Path
@@ -56,13 +66,13 @@ func Live(w http.ResponseWriter, r *http.Request)  {
       case "douyin":
         douyinobj := &liveurls.Douyin{}
         douyinobj.Rid = rid
-        http.Redirect(w, r, http.StatusMovedPermanently, duanyan(adurl, douyinobj.GetDouYinUrl()))
+        http.Redirect(w, r, duanyan(adurl, douyinobj.GetDouYinUrl()), http.StatusMovedPermanently)
       case "douyu":
         douyuobj := &liveurls.Douyu{}
         douyuobj.Rid = rid
         douyuobj.Stream_type = defaultQuery(r, "stream", "hls")
         douyuobj.Cdn_type = defaultQuery(r, "cdn", "akm-tct")
-        http.Redirect(http.StatusMovedPermanently, duanyan(adurl, douyuobj.GetRealUrl()))
+        http.Redirect(w, r, duanyan(adurl, douyuobj.GetRealUrl()), http.StatusMovedPermanently)
       case "huya":
         huyaobj := &liveurls.Huya{}
         huyaobj.Rid = rid
@@ -72,7 +82,7 @@ func Live(w http.ResponseWriter, r *http.Request)  {
         if huyaobj.Type == "display" {
           returnJson(w, 200, huyaobj.GetLiveUrl())
         } else {
-          http.Redirect(http.StatusMovedPermanently, duanyan(adurl, huyaobj.GetLiveUrl()))
+          http.Redirect(w, r, duanyan(adurl, huyaobj.GetLiveUrl()), http.StatusMovedPermanently)
         }
       case "bilibili":
         biliobj := &liveurls.BiliBili{}
@@ -80,12 +90,12 @@ func Live(w http.ResponseWriter, r *http.Request)  {
         biliobj.Platform = defaultQuery(r, "platform", "web")
         biliobj.Quality = defaultQuery(r, "quality", "10000")
         biliobj.Line = defaultQuery(r, "line", "second")
-        http.Redirect(http.StatusMovedPermanently, duanyan(adurl, biliobj.GetPlayUrl()))
+        http.Redirect(w, r, duanyan(adurl, biliobj.GetPlayUrl()), http.StatusMovedPermanently)
       case "youtube":
         ytbObj := &liveurls.Youtube{}
         ytbObj.Rid = rid
         ytbObj.Quality = defaultQuery(r, "quality", "1080")
-        http.Redirect(http.StatusMovedPermanently, duanyan(adurl, ytbObj.GetLiveUrl()))
+        http.Redirect(w, r, duanyan(adurl, ytbObj.GetLiveUrl()), http.StatusMovedPermanently)
       }
     } else {
       log.Println("Invalid path:", path)
