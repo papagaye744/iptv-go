@@ -3,6 +3,10 @@
     {
       "src": "/api/test",
       "dest": "/api/test.go"
+    },
+    {
+      "src": "/api/live",
+      "dest": "/api/live.go"
     }
   ]
 }
