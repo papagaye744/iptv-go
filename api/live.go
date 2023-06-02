@@ -1,4 +1,4 @@
-package api
+package handler
 
 import (
   // "liveurls"
@@ -52,7 +52,7 @@ func duanyan(adurl string, realurl any) string {
 }
 
 // vercel 平台会将请求传递给该函数，这个函数名随意，但函数参数必须按照该规则。
-func Live(w http.ResponseWriter, r *http.Request)  {
+func Handler(w http.ResponseWriter, r *http.Request)  {
   path := r.URL.Path
   params := strings.Split(path, "/")
   if len(params) >= 3 {
