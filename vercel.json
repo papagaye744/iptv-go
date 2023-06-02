@@ -1,24 +1,8 @@
 {
   "routes": [
     {
-      "src": "/liveurls/bilibili",
-      "dest": "/liveurls/bilibili.go"
-    },
-    {
-      "src": "/liveurls/douyin",
-      "dest": "/liveurls/douyin.go"
-    },
-    {
-      "src": "/liveurls/douyu",
-      "dest": "/liveurls/douyu.go"
-    },
-    {
-      "src": "/liveurls/huya",
-      "dest": "/liveurls/huya.go"
-    },
-    {
-      "src": "/liveurls/youtube",
-      "dest": "/liveurls/youtube.go"
+      "src": "/api/live",
+      "dest": "/api/live.go"
     }
   ]
 }
