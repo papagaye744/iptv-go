@@ -1,7 +1,7 @@
 package handler
 
 import (
-  "iptv/liveurls"
+  "Live/liveurls"
   "fmt"
   "net/http"
   "strings"
