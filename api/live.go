@@ -5,7 +5,7 @@ import (
   "fmt"
   "net/http"
   "strings"
-  "log"
+  // "log"
 )
 
 func defaultQuery(r *http.Request, name string, defaultValue string) string {
@@ -85,9 +85,12 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
         yyObj.Rid = rid
         yyObj.Quality = defaultQuery(r, "quality", "4")
         http.Redirect(w, r, duanyan(adurl, yyObj.GetLiveUrl()), http.StatusMovedPermanently)
+      default:
+        fmt.Fprintf(w, "Unknown platform=%s, room=%s", platform, rid)
     }
   } else {
-    log.Println("Invalid path:", path)
-    http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+    // log.Println("Invalid path:", path)
+    fmt.Fprintf(w, "Invalid path: %s", path)
+    // http.Error(w, "Internal Server Error", http.StatusInternalServerError)
   }
 }
