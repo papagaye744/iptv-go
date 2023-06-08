@@ -2,7 +2,7 @@ package handler
 
 import (
   "Live/liveurls"
-  "fmt"
+  // "fmt"
   "net/http"
   "strings"
   "log"
