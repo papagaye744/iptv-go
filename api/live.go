@@ -5,33 +5,30 @@ import (
   "net/http"
   "strings"
   "log"
-  "encoding/json"
+  // "encoding/json"
   "liveurls"
 )
 
-type Response struct {
-  Code int `json:"code"`
-  Message string `json:"message"`
-}
+// type MessageResponse struct {
+//   Code int `json:"code"`
+//   Message string `json:"message"`
+// }
 
-func returnJson(w http.ResponseWriter, code int, message string) {
-  // 返回数据
-  resp := Response {
-    Code: code,
-    Message: message
-  }
-  // 格式化为json字符串
-  json, err := json.Marshal(resp)
-  if err != nil {
-    log.Println("Failed to encode JSON:", err)
-    http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-    return
-  }
-  // 设置响应头
-  w.Header().Set("Content-Type", "application/json")
-  // 写入json
-  w.Write(json)
-}
+// // 返回数据
+// func returnJson(w http.ResponseWriter, code int, message string) {
+//   resp := MessageResponse {
+//     Code: code,
+//     Message: message
+//   }
+//   json, err := json.Marshal(resp)
+//   if err != nil {
+//     log.Println("Failed to encode JSON:", err)
+//     http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+//     return
+//   }
+//   w.Header().Set("Content-Type", "application/json")
+//   w.Write(json)
+// }
 
 func defaultQuery(r *http.Request, name string, defaultValue string) string {
   param := r.URL.Query().Get(name)
@@ -77,7 +74,8 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
         huyaobj.Media = defaultQuery(r, "media", "flv")
         huyaobj.Type = defaultQuery(r, "type", "nodisplay")
         if huyaobj.Type == "display" {
-          returnJson(w, 200, huyaobj.GetLiveUrl())
+          // returnJson(w, 200, huyaobj.GetLiveUrl())
+          http.Error(w, "Internal Server Error", http.StatusInternalServerError)
         } else {
           http.Redirect(w, r, duanyan(adurl, huyaobj.GetLiveUrl()), http.StatusMovedPermanently)
         }
