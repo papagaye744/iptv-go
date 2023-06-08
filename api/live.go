@@ -5,7 +5,7 @@ import (
   "fmt"
   "net/http"
   "strings"
-  // "log"
+  "log"
 )
 
 func defaultQuery(r *http.Request, name string, defaultValue string) string {
@@ -89,8 +89,7 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
         fmt.Fprintf(w, "Unknown platform=%s, room=%s", platform, rid)
     }
   } else {
-    // log.Println("Invalid path:", path)
-    fmt.Fprintf(w, "Invalid path: %s", path)
-    // http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+    log.Println("Invalid path:", path)
+    http.Error(w, "Internal Server Error", http.StatusInternalServerError)
   }
 }
