@@ -1,7 +1,6 @@
-package handler
+package liveurls
 
 import (
-  "liveurls"
   "fmt"
   "net/http"
   "strings"
