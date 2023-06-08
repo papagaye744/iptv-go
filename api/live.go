@@ -32,14 +32,14 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
   adurl := "http://159.75.85.63:5680/d/ad/roomad/playlist.m3u8"
   path := r.URL.Path
   params := strings.Split(path, "/")
-  fmt.Fprintf(w, "request url: %s", path)
-  if len(params) >= 3 {
+  // fmt.Fprintf(w, "request url: %s", path)
+  if len(params) >= 4 {
     // 解析成功
     // 直播平台
-    platform := params[1]
+    platform := params[2]
     // 房间号
-    rid := params[2]
-    fmt.Fprintf(w, "parsed platform=%s, room=%s", platform, rid)
+    rid := params[3]
+    // fmt.Fprintf(w, "parsed platform=%s, room=%s", platform, rid)
     switch platform {
       case "douyin":
         // 斗鱼
