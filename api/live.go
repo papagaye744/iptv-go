@@ -59,7 +59,7 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
         huyaobj.Media = defaultQuery(r, "media", "flv")
         huyaobj.Type = defaultQuery(r, "type", "nodisplay")
         if huyaobj.Type == "display" {
-          fmt.Fprintf(w, huyaobj.GetLiveUrl())
+          fmt.Fprintf(w, huyaobj.GetLiveUrl().(string))
         } else {
           http.Redirect(w, r, duanyan(adurl, huyaobj.GetLiveUrl()), http.StatusMovedPermanently)
         }
