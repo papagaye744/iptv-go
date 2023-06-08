@@ -5,8 +5,8 @@
       "dest": "/liveurls/live.go"
     },
     {
-      "src": "/test",
-      "dest": "/test.go"
+      "src": "/api/test",
+      "dest": "/api/test.go"
     }
   ]
 }
