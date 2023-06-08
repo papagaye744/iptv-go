@@ -1,4 +1,4 @@
-package handler
+package api
 
 import (
   // "liveurls"
@@ -33,23 +33,23 @@ func returnJson(w http.ResponseWriter, code int, message string) {
   w.Write(json)
 }
 
-func defaultQuery(r *http.Request, name string, defaultValue string) string {
-  param := r.URL.Query().Get(name)
-  if param == "" {
-    return defaultValue
-  }
-  return param
-}
+// func defaultQuery(r *http.Request, name string, defaultValue string) string {
+//   param := r.URL.Query().Get(name)
+//   if param == "" {
+//     return defaultValue
+//   }
+//   return param
+// }
 
-func duanyan(adurl string, realurl any) string {
-	var liveurl string
-	if str, ok := realurl.(string); ok {
-		liveurl = str
-	} else {
-		liveurl = adurl
-	}
-	return liveurl
-}
+// func duanyan(adurl string, realurl any) string {
+// 	var liveurl string
+// 	if str, ok := realurl.(string); ok {
+// 		liveurl = str
+// 	} else {
+// 		liveurl = adurl
+// 	}
+// 	return liveurl
+// }
 
 // vercel 平台会将请求传递给该函数，这个函数名随意，但函数参数必须按照该规则。
 func Handler(w http.ResponseWriter, r *http.Request)  {
