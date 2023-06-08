@@ -1,6 +1,7 @@
-package liveurls
+package handler
 
 import (
+  "../liveurls"
   "fmt"
   "net/http"
   "strings"
@@ -57,17 +58,17 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
     rid := params[2]
     switch platform {
       case "douyin":
-        douyinobj := &Douyin{}
+        douyinobj := &liveurls.Douyin{}
         douyinobj.Rid = rid
         http.Redirect(w, r, duanyan(adurl, douyinobj.GetDouYinUrl()), http.StatusMovedPermanently)
       case "douyu":
-        douyuobj := &Douyu{}
+        douyuobj := &liveurls.Douyu{}
         douyuobj.Rid = rid
         douyuobj.Stream_type = defaultQuery(r, "stream", "hls")
         douyuobj.Cdn_type = defaultQuery(r, "cdn", "akm-tct")
         http.Redirect(w, r, duanyan(adurl, douyuobj.GetRealUrl()), http.StatusMovedPermanently)
       case "huya":
-        huyaobj := &Huya{}
+        huyaobj := &liveurls.Huya{}
         huyaobj.Rid = rid
         huyaobj.Cdn = defaultQuery(r, "cdn", "hwcdn")
         huyaobj.Media = defaultQuery(r, "media", "flv")
@@ -79,14 +80,14 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
           http.Redirect(w, r, duanyan(adurl, huyaobj.GetLiveUrl()), http.StatusMovedPermanently)
         }
       case "bilibili":
-        biliobj := &BiliBili{}
+        biliobj := &liveurls.BiliBili{}
         biliobj.Rid = rid
         biliobj.Platform = defaultQuery(r, "platform", "web")
         biliobj.Quality = defaultQuery(r, "quality", "10000")
         biliobj.Line = defaultQuery(r, "line", "second")
         http.Redirect(w, r, duanyan(adurl, biliobj.GetPlayUrl()), http.StatusMovedPermanently)
       case "youtube":
-        ytbObj := &Youtube{}
+        ytbObj := &liveurls.Youtube{}
         ytbObj.Rid = rid
         ytbObj.Quality = defaultQuery(r, "quality", "1080")
         http.Redirect(w, r, duanyan(adurl, ytbObj.GetLiveUrl()), http.StatusMovedPermanently)
