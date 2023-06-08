@@ -2,10 +2,10 @@
   "routes": [
     {
       "src": "/live/.*",
-      "dest": "/liveurls/live.go"
+      "dest": "/api/live.go"
     },
     {
-      "src": "/api/test",
+      "src": "/test",
       "dest": "/api/test.go"
     }
   ]
