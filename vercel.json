@@ -3,6 +3,10 @@
     {
       "src": "/live/.*",
       "dest": "/liveurls/live.go"
+    },
+    {
+      "src": "/test",
+      "dest": "/test.go"
     }
   ]
 }
