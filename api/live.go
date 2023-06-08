@@ -2,33 +2,11 @@ package handler
 
 import (
   "Live/liveurls"
-  // "fmt"
+  "fmt"
   "net/http"
   "strings"
   "log"
-  // "encoding/json"
 )
-
-// type MessageResponse struct {
-//   Code int `json:"code"`
-//   Message string `json:"message"`
-// }
-
-// // 返回数据
-// func returnJson(w http.ResponseWriter, code int, message string) {
-//   resp := MessageResponse {
-//     Code: code,
-//     Message: message
-//   }
-//   json, err := json.Marshal(resp)
-//   if err != nil {
-//     log.Println("Failed to encode JSON:", err)
-//     http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-//     return
-//   }
-//   w.Header().Set("Content-Type", "application/json")
-//   w.Write(json)
-// }
 
 func defaultQuery(r *http.Request, name string, defaultValue string) string {
   param := r.URL.Query().Get(name)
@@ -45,6 +23,7 @@ func duanyan(adurl string, realurl any) string {
 	} else {
 		liveurl = adurl
 	}
+  log.Println("Redirect url:", liveurl)
 	return liveurl
 }
 
@@ -54,32 +33,38 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
   path := r.URL.Path
   params := strings.Split(path, "/")
   if len(params) >= 3 {
+    // 解析成功
+    // 直播平台
     platform := params[1]
+    // 房间号
     rid := params[2]
     switch platform {
       case "douyin":
+        // 斗鱼
         douyinobj := &liveurls.Douyin{}
         douyinobj.Rid = rid
         http.Redirect(w, r, duanyan(adurl, douyinobj.GetDouYinUrl()), http.StatusMovedPermanently)
       case "douyu":
+        // 抖音
         douyuobj := &liveurls.Douyu{}
         douyuobj.Rid = rid
         douyuobj.Stream_type = defaultQuery(r, "stream", "hls")
         douyuobj.Cdn_type = defaultQuery(r, "cdn", "akm-tct")
         http.Redirect(w, r, duanyan(adurl, douyuobj.GetRealUrl()), http.StatusMovedPermanently)
       case "huya":
+        // 虎牙
         huyaobj := &liveurls.Huya{}
         huyaobj.Rid = rid
         huyaobj.Cdn = defaultQuery(r, "cdn", "hwcdn")
         huyaobj.Media = defaultQuery(r, "media", "flv")
         huyaobj.Type = defaultQuery(r, "type", "nodisplay")
         if huyaobj.Type == "display" {
-          // returnJson(w, 200, huyaobj.GetLiveUrl())
-          http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+          fmt.Fprintf(w, "<h1>"+huyaobj.GetLiveUrl()+"</h1>")
         } else {
           http.Redirect(w, r, duanyan(adurl, huyaobj.GetLiveUrl()), http.StatusMovedPermanently)
         }
       case "bilibili":
+        // B站
         biliobj := &liveurls.BiliBili{}
         biliobj.Rid = rid
         biliobj.Platform = defaultQuery(r, "platform", "web")
@@ -87,10 +72,17 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
         biliobj.Line = defaultQuery(r, "line", "second")
         http.Redirect(w, r, duanyan(adurl, biliobj.GetPlayUrl()), http.StatusMovedPermanently)
       case "youtube":
+        // 油管
         ytbObj := &liveurls.Youtube{}
         ytbObj.Rid = rid
         ytbObj.Quality = defaultQuery(r, "quality", "1080")
         http.Redirect(w, r, duanyan(adurl, ytbObj.GetLiveUrl()), http.StatusMovedPermanently)
+      case "yy":
+        // YY直播
+        yyObj := &liveurls.Yy{}
+        yyObj.Rid = rid
+        yyObj.Quality = defaultQuery(r, "quality", "4")
+        http.Redirect(w, r, duanyan(adurl, yyObj.GetLiveUrl()), http.StatusMovedPermanently)
     }
   } else {
     log.Println("Invalid path:", path)
