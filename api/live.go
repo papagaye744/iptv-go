@@ -1,7 +1,7 @@
 package api
 
 import (
-  "liveurls"
+  "../liveurls"
   "fmt"
   "net/http"
   "strings"
