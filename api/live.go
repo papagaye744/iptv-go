@@ -42,16 +42,16 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
     // fmt.Fprintf(w, "parsed platform=%s, room=%s", platform, rid)
     switch platform {
       case "douyin":
-        // 斗鱼
+        // 抖音
         douyinobj := &liveurls.Douyin{}
         douyinobj.Rid = rid
         http.Redirect(w, r, duanyan(adurl, douyinobj.GetDouYinUrl()), http.StatusMovedPermanently)
       case "douyu":
-        // 抖音
+        // 斗鱼
         douyuobj := &liveurls.Douyu{}
         douyuobj.Rid = rid
         douyuobj.Stream_type = defaultQuery(r, "stream", "hls")
-        douyuobj.Cdn_type = defaultQuery(r, "cdn", "akm-tct")
+        douyuobj.Cdn_type = defaultQuery(r, "cdn", "openhls-tct")
         http.Redirect(w, r, duanyan(adurl, douyuobj.GetRealUrl()), http.StatusMovedPermanently)
       case "huya":
         // 虎牙
