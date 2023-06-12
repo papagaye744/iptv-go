@@ -5,8 +5,8 @@
       "dest": "/api/live.go"
     },
     {
-      "src": "/test",
-      "dest": "/api/test.go"
+      "src": "/",
+      "dest": "/api/index.go"
     }
   ]
 }
