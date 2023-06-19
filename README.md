@@ -27,5 +27,12 @@
 
 > 注意路径多了一层`yqk`
 
+> 可选设置
+> 1. 设置Vercel的环境变量`LIVE_URL`可以替换返回的m3u直播链接，就不用通过请求连接的`url`参数设置了
+> 例如设置环境变量为: `https://www.baidu.com/live`
+> ![环境变量设置](.github/asserts/env.png)
+> 返回文件的效果
+> ![环境变量设置](.github/asserts/envDemo.png)
+> 优先级：链接的`url`参数 > 环境变量`LIVE_URL` > 默认域名
 
 详细使用说明参考: [https://github.com/youshandefeiyang/LiveRedirect/blob/main/Golang/README.md](https://github.com/youshandefeiyang/LiveRedirect/blob/main/Golang/README.md)
