@@ -5,9 +5,7 @@ import (
   "fmt"
   "encoding/json"
   "net/http"
-  "net/url"
   "time"
-  "strings"
   "log"
 )
 
@@ -23,7 +21,7 @@ func getTestVideoUrl(w http.ResponseWriter) {
 }
 
 // vercel 平台会将请求传递给该函数，这个函数名随意，但函数参数必须按照该规则。
-func Handler(w http.ResponseWriter, r *http.Request)  {
+func yqk(w http.ResponseWriter, r *http.Request)  {
 	path := r.URL.Path
 	switch path {
 	  case "/yqk/huyayqk.m3u":
