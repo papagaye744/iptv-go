@@ -1,6 +1,7 @@
 package util
 
 import (
+  "os"
   "fmt"
   "time"
   "net/http"
@@ -21,7 +22,7 @@ func GetTestVideoUrl(w http.ResponseWriter) {
 func GetLivePrefix(r *http.Request) string {
 	// 尝试从环境变量读取url
 	envUrl := os.Getenv("LIVE_URL")
-	if param == "" {
+	if envUrl == "" {
 		// 默认url
 		envUrl = "https://www.goodiptv.club"
 	  }
