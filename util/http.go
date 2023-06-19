@@ -4,6 +4,7 @@ import (
   "fmt"
   "time"
   "net/http"
+  "net/url"
 )
 
 func GetTestVideoUrl(w http.ResponseWriter) {
@@ -38,6 +39,6 @@ func Duanyan(adurl string, realurl any) string {
   } else {
 	liveurl = adurl
   }
-  log.Println("Redirect url:", liveurl)
+  // log.Println("Redirect url:", liveurl)
  return liveurl
 }
