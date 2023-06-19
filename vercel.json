@@ -5,6 +5,10 @@
       "dest": "/api/live.go"
     },
     {
+      "src": "/yqk/.*",
+      "dest": "/api/yqk/yqk.go"
+    },
+    {
       "src": "/",
       "dest": "/api/index.go"
     }
