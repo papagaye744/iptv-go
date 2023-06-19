@@ -5,6 +5,8 @@ import (
   "fmt"
   "encoding/json"
   "net/http"
+  "net/url"
+  "time"
   "strings"
   "log"
 )
@@ -90,6 +92,7 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
 			i++
 		}
 	  default:
+		log.Println("Invalid path:", path)
 		fmt.Fprintf(w, "<h1>链接错误!</h1>")
 	}
 }
