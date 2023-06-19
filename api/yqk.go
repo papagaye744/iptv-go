@@ -1,4 +1,4 @@
-package handler
+package yqk
 
 import (
   "Live/list"
@@ -6,9 +6,7 @@ import (
   "fmt"
   "encoding/json"
   "net/http"
-  "net/url"
   "strconv"
-  "time"
   "log"
 )
 

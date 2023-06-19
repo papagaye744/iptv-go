@@ -1,4 +1,4 @@
-package handler
+package live
 
 import (
   "Live/liveurls"
@@ -70,7 +70,7 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
         biliobj.Platform = util.DefaultQuery(r, "platform", "web")
         biliobj.Quality = util.DefaultQuery(r, "quality", "10000")
         biliobj.Line = util.DefaultQuery(r, "line", "second")
-        http.Redirect(w, r, util.Dduanyan(adurl, biliobj.GetPlayUrl()), http.StatusMovedPermanently)
+        http.Redirect(w, r, util.Duanyan(adurl, biliobj.GetPlayUrl()), http.StatusMovedPermanently)
       case "youtube":
         // 油管
         ytbObj := &liveurls.Youtube{}
