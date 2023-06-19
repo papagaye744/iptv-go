@@ -1,5 +1,11 @@
 package util
 
+import (
+  "fmt"
+  "time"
+  "net/http"
+)
+
 func GetTestVideoUrl(w http.ResponseWriter) {
   str_time := time.Now().Format("2006-01-02 15:04:05")
   fmt.Fprintln(w, "#EXTM3U")
