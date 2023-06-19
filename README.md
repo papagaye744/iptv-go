@@ -8,8 +8,10 @@
 4. Enjoy~
 
 > 国内优化指南：
+>
 > 1. 自定义域名`CNAME`到[cname-china.vercel-dns.com](cname-china.vercel-dns.com)加速访问
-> 2. 把Vercel的Function Region设置为香港服务器可以获得更低延迟
+>
+> 2. Vercel的Function Region设置为香港服务器可以获得更低延迟
 > ![Vercel设置](.github/asserts/region.png)
 > 设置完需要重新部署生效
 
@@ -18,5 +20,12 @@
 `https://<你的域名>/live/平台/id`
 
 > 注意路径多了一层`live`
+
+## 一起看访问路径
+
+`https://<你的域名>/yqk/xxx.m3u`
+
+> 注意路径多了一层`yqk`
+
 
 详细使用说明参考: [https://github.com/youshandefeiyang/LiveRedirect/blob/main/Golang/README.md](https://github.com/youshandefeiyang/LiveRedirect/blob/main/Golang/README.md)
