@@ -19,9 +19,15 @@ func GetTestVideoUrl(w http.ResponseWriter) {
 }
 
 func GetLivePrefix(r *http.Request) string {
-  firstUrl := DefaultQuery(r, "url", "https://www.goodiptv.club")
-  realUrl, _ := url.QueryUnescape(firstUrl)
-  return realUrl
+	// 尝试从环境变量读取url
+	envUrl := os.Getenv("LIVE_URL")
+	if param == "" {
+		// 默认url
+		envUrl = "https://www.goodiptv.club"
+	  }
+    firstUrl := DefaultQuery(r, "url", envUrl)
+    realUrl, _ := url.QueryUnescape(firstUrl)
+    return realUrl
 }
 
 func DefaultQuery(r *http.Request, name string, defaultValue string) string {
