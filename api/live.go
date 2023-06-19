@@ -1,4 +1,4 @@
-package live
+package handler
 
 import (
   "Live/liveurls"
