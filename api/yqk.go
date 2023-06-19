@@ -29,7 +29,8 @@ func getLivePrefix(r *http.Request) string {
 }
 
 // vercel 平台会将请求传递给该函数，这个函数名随意，但函数参数必须按照该规则。
-func yqk(w http.ResponseWriter, r *http.Request)  {
+// go语言大写就是公开，所以首字母必须大写
+func Yqk(w http.ResponseWriter, r *http.Request)  {
 	path := r.URL.Path
 	switch path {
 	  case "/yqk/huyayqk.m3u":
