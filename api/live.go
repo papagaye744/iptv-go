@@ -32,10 +32,26 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
   adurl := "http://159.75.85.63:5680/d/ad/roomad/playlist.m3u8"
   path := r.URL.Path
   params := strings.Split(path, "/")
+
   // fmt.Fprintf(w, "request url: %s", path)
+
+  if len(params) == 3 {
+    // 平台
+    platform := params[2]
+    switch platform {
+      case "douyin":
+        // 处理抖音手机直播间
+        vrurl := r.URL.Query().Get("url")
+		    douyinobj := &liveurls.Douyin{}
+		    douyinobj.Shorturl = vrurl
+        http.Redirect(w, r, duanyan(adurl, douyinobj.GetRealurl()), http.StatusMovedPermanently)
+        return
+    }
+  }
+
   if len(params) >= 4 {
     // 解析成功
-    // 直播平台
+    // 平台
     platform := params[2]
     // 房间号
     rid := params[3]
