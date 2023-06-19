@@ -5,6 +5,8 @@ import (
   "fmt"
   "encoding/json"
   "net/http"
+  "net/url"
+  "strconv"
   "time"
   "log"
 )
@@ -18,6 +20,12 @@ func getTestVideoUrl(w http.ResponseWriter) {
 	fmt.Fprintln(w, "http://159.75.85.63:5680/d/ad/h264/playad.m3u8")
 	fmt.Fprintln(w, "#EXTINF:-1 tvg-name=\"4K60PHLG-HEVC-EAC3测试\" tvg-logo=\"https://cdn.jsdelivr.net/gh/youshandefeiyang/IPTV/logo/tg.jpg\" group-title=\"4K频道\",4K60PHLG-HEVC-EAC3测试")
 	fmt.Fprintln(w, "http://159.75.85.63:5680/d/ad/playad.m3u8")
+}
+
+func getLivePrefix(r *http.Request) string {
+	firstUrl := defaultQuery(r, "url", "https://www.goodiptv.club")
+	realUrl, _ := url.QueryUnescape(firstUrl)
+	return realUrl
 }
 
 // vercel 平台会将请求传递给该函数，这个函数名随意，但函数参数必须按照该规则。
@@ -42,7 +50,7 @@ func yqk(w http.ResponseWriter, r *http.Request)  {
 			data := res.VList
 			for _, value := range data {
 				fmt.Fprintf(w, "#EXTINF:-1 tvg-logo=\"%s\" group-title=\"%s\", %s\n", value.SAvatar180, value.SGameFullName, value.SNick)
-				fmt.Fprintf(w, "%s/huya/%v\n", getLivePrefix(c), value.LProfileRoom)
+				fmt.Fprintf(w, "%s/huya/%v\n", getLivePrefix(r), value.LProfileRoom)
 			}
 		}
 	  case "/yqk/douyuyqk.m3u":
@@ -66,7 +74,7 @@ func yqk(w http.ResponseWriter, r *http.Request)  {
 
 			for _, value := range data {
 				fmt.Fprintf(w, "#EXTINF:-1 tvg-logo=\"https://apic.douyucdn.cn/upload/%s_big.jpg\" group-title=\"%s\", %s\n", value.Av, value.C2name, value.Nn)
-				fmt.Fprintf(w, "%s/douyu/%v\n", getLivePrefix(c), value.Rid)
+				fmt.Fprintf(w, "%s/douyu/%v\n", getLivePrefix(r), value.Rid)
 			}
 		}
 	  case "/yqk/yylunbo.m3u":
@@ -82,7 +90,7 @@ func yqk(w http.ResponseWriter, r *http.Request)  {
 			json.Unmarshal([]byte(apiRes), &res)
 			for _, value := range res.Data.Data {
 				fmt.Fprintf(w, "#EXTINF:-1 tvg-logo=\"%s\" group-title=\"%s\", %s\n", value.Avatar, value.Biz, value.Desc)
-				fmt.Fprintf(w, "%s/yy/%v\n", getLivePrefix(c), value.Sid)
+				fmt.Fprintf(w, "%s/yy/%v\n", getLivePrefix(r), value.Sid)
 			}
 			if res.Data.IsLastPage == 1 {
 				break
