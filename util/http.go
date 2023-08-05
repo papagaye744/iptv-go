@@ -10,7 +10,11 @@ import (
 )
 
 func GetTestVideoUrl(w http.ResponseWriter) {
-  str_time := time.Now().Format("2006-01-02 15:04:05")
+	TimeLocation, err := time.LoadLocation("Asia/Shanghai")
+	if err != nil {
+		TimeLocation = time.FixedZone("CST", 8*60*60)
+	}
+	str_time := time.Now().In(TimeLocation).Format("2006-01-02 15:04:05")
   fmt.Fprintln(w, "#EXTM3U")
   fmt.Fprintln(w, "#EXTINF:-1 tvg-name=\""+str_time+"\" tvg-logo=\"https://cdn.jsdelivr.net/gh/youshandefeiyang/IPTV/logo/tg.jpg\" group-title=\"列表更新时间\","+str_time)
   fmt.Fprintln(w, "https://cdn.jsdelivr.net/gh/youshandefeiyang/testvideo/time/time.mp4")
