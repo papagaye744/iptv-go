@@ -9,7 +9,7 @@
       "dest": "/api/yqk/yqk.go"
     },
     {
-      "src": "/",
+      "src": "/.*",
       "dest": "/api/index.go"
     }
   ]
