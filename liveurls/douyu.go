@@ -115,7 +115,7 @@ func (d *Douyu) GetRealUrl() any {
 		panic(n3err)
 	}
 	param := fmt.Sprintf("%s", result2)
-	realparam := param + "&rate=-1"
+	realparam := param + "&rate=0"
 	r1, n4err := http.Post("https://www.douyu.com/lapi/live/getH5Play/"+realroomid, "application/x-www-form-urlencoded", strings.NewReader(realparam))
 	if n4err != nil {
 		panic(n4err)
