@@ -120,8 +120,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
             // 斗鱼
             douyuobj := &liveurls.Douyu{}
             douyuobj.Rid = rid
-            douyuobj.Stream_type = util.DefaultQuery(r, "stream", "hls")
-            douyuobj.Cdn_type = util.DefaultQuery(r, "cdn", "openhls-tct")
+            douyuobj.Stream_type = util.DefaultQuery(r, "stream", "flv")
             http.Redirect(w, r, util.Duanyan(adurl, douyuobj.GetRealUrl()), http.StatusMovedPermanently)
           case "huya":
             // 虎牙
@@ -141,7 +140,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
             biliobj.Rid = rid
             biliobj.Platform = util.DefaultQuery(r, "platform", "web")
             biliobj.Quality = util.DefaultQuery(r, "quality", "10000")
-            biliobj.Line = util.DefaultQuery(r, "line", "second")
+            biliobj.Line = util.DefaultQuery(r, "line", "first")
             http.Redirect(w, r, util.Duanyan(adurl, biliobj.GetPlayUrl()), http.StatusMovedPermanently)
           case "youtube":
             // 油管
