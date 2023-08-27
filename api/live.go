@@ -1,8 +1,8 @@
 package handler
 
 import (
-  "Live/liveurls"
-  "Live/util"
+  "Golang/liveurls"
+  "Golang/utils"
   "fmt"
   "net/http"
   "strings"
@@ -26,7 +26,7 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
         vrurl := r.URL.Query().Get("url")
 		    douyinobj := &liveurls.Douyin{}
 		    douyinobj.Shorturl = vrurl
-        http.Redirect(w, r, util.Duanyan(adurl, douyinobj.GetRealurl()), http.StatusMovedPermanently)
+        http.Redirect(w, r, utils.Duanyan(adurl, douyinobj.GetRealurl()), http.StatusMovedPermanently)
         return
     }
   }
@@ -43,45 +43,45 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
         // 抖音
         douyinobj := &liveurls.Douyin{}
         douyinobj.Rid = rid
-        http.Redirect(w, r, util.Duanyan(adurl, douyinobj.GetDouYinUrl()), http.StatusMovedPermanently)
+        http.Redirect(w, r, utils.Duanyan(adurl, douyinobj.GetDouYinUrl()), http.StatusMovedPermanently)
       case "douyu":
         // 斗鱼
         douyuobj := &liveurls.Douyu{}
         douyuobj.Rid = rid
-        douyuobj.Stream_type = util.DefaultQuery(r, "stream", "flv")
-        http.Redirect(w, r, util.Duanyan(adurl, douyuobj.GetRealUrl()), http.StatusMovedPermanently)
+        douyuobj.Stream_type = utils.DefaultQuery(r, "stream", "flv")
+        http.Redirect(w, r, utils.Duanyan(adurl, douyuobj.GetRealUrl()), http.StatusMovedPermanently)
       case "huya":
         // 虎牙
         huyaobj := &liveurls.Huya{}
         huyaobj.Rid = rid
-        huyaobj.Cdn = util.DefaultQuery(r, "cdn", "hwcdn")
-        huyaobj.Media = util.DefaultQuery(r, "media", "flv")
-        huyaobj.Type = util.DefaultQuery(r, "type", "nodisplay")
+        huyaobj.Cdn = utils.DefaultQuery(r, "cdn", "hwcdn")
+        huyaobj.Media = utils.DefaultQuery(r, "media", "flv")
+        huyaobj.Type = utils.DefaultQuery(r, "type", "nodisplay")
         if huyaobj.Type == "display" {
           fmt.Fprintf(w, huyaobj.GetLiveUrl().(string))
         } else {
-          http.Redirect(w, r, util.Duanyan(adurl, huyaobj.GetLiveUrl()), http.StatusMovedPermanently)
+          http.Redirect(w, r, utils.Duanyan(adurl, huyaobj.GetLiveUrl()), http.StatusMovedPermanently)
         }
       case "bilibili":
         // B站
         biliobj := &liveurls.BiliBili{}
         biliobj.Rid = rid
-        biliobj.Platform = util.DefaultQuery(r, "platform", "web")
-        biliobj.Quality = util.DefaultQuery(r, "quality", "10000")
-        biliobj.Line = util.DefaultQuery(r, "line", "first")
-        http.Redirect(w, r, util.Duanyan(adurl, biliobj.GetPlayUrl()), http.StatusMovedPermanently)
+        biliobj.Platform = utils.DefaultQuery(r, "platform", "web")
+        biliobj.Quality = utils.DefaultQuery(r, "quality", "10000")
+        biliobj.Line = utils.DefaultQuery(r, "line", "first")
+        http.Redirect(w, r, utils.Duanyan(adurl, biliobj.GetPlayUrl()), http.StatusMovedPermanently)
       case "youtube":
         // 油管
         ytbObj := &liveurls.Youtube{}
         ytbObj.Rid = rid
-        ytbObj.Quality = util.DefaultQuery(r, "quality", "1080")
-        http.Redirect(w, r, util.Duanyan(adurl, ytbObj.GetLiveUrl()), http.StatusMovedPermanently)
+        ytbObj.Quality = utils.DefaultQuery(r, "quality", "1080")
+        http.Redirect(w, r, utils.Duanyan(adurl, ytbObj.GetLiveUrl()), http.StatusMovedPermanently)
       case "yy":
         // YY直播
         yyObj := &liveurls.Yy{}
         yyObj.Rid = rid
-        yyObj.Quality = util.DefaultQuery(r, "quality", "4")
-        http.Redirect(w, r, util.Duanyan(adurl, yyObj.GetLiveUrl()), http.StatusMovedPermanently)
+        yyObj.Quality = utils.DefaultQuery(r, "quality", "4")
+        http.Redirect(w, r, utils.Duanyan(adurl, yyObj.GetLiveUrl()), http.StatusMovedPermanently)
       default:
         fmt.Fprintf(w, "Unknown platform=%s, room=%s", platform, rid)
     }

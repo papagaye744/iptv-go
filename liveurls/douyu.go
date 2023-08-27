@@ -8,10 +8,10 @@
 package liveurls
 
 import (
+	"Golang/utils"
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
-	js "github.com/dop251/goja"
 	"io"
 	"net/http"
 	"regexp"
@@ -50,6 +50,7 @@ func (d *Douyu) GetRoomId() any {
 }
 
 func (d *Douyu) GetRealUrl() any {
+	var jsUtil = &utils.JsUtil{}
 	did := "10000000000000000000000000001501"
 	var timestamp = time.Now().Unix()
 	var realroomid string
@@ -71,22 +72,9 @@ func (d *Douyu) GetRealUrl() any {
 	res := reg.FindStringSubmatch(string(body))
 	nreg := regexp.MustCompile(`(?i)eval.*?;}`)
 	strfn := nreg.ReplaceAllString(res[1], "strc;}")
-	vm := js.New()
-	_, err := vm.RunString(strfn)
-	if err != nil {
-		panic(err)
-	}
-	jsfn, ok := js.AssertFunction(vm.Get("ub98484234"))
-	if !ok {
-		panic("这不是一个函数")
-	}
-	result, nerr := jsfn(
-		js.Undefined(),
-		vm.ToValue("ub98484234"),
-	)
-	if nerr != nil {
-		panic(nerr)
-	}
+	var funcContent1 []string
+	funcContent1 = append(append(funcContent1, strfn), "ub98484234")
+	result := jsUtil.JsRun(funcContent1, "ub98484234")
 	nres := fmt.Sprintf("%s", result)
 	nnreg := regexp.MustCompile(`(?i)v=(\d+)`)
 	nnres := nnreg.FindStringSubmatch(nres)
@@ -96,29 +84,14 @@ func (d *Douyu) GetRealUrl() any {
 	strfn2 := nnnreg.ReplaceAllString(nres, "return rt;}")
 	strfn3 := strings.Replace(strfn2, `(function (`, `function sign(`, -1)
 	strfn4 := strings.Replace(strfn3, `CryptoJS.MD5(cb).toString()`, `"`+rb+`"`, -1)
-	vm2 := js.New()
-	_, nnerr := vm2.RunString(strfn4)
-	if nnerr != nil {
-		panic(nnerr)
-	}
-	jsfn2, nok := js.AssertFunction(vm2.Get("sign"))
-	if !nok {
-		panic("这不是一个函数")
-	}
-	result2, n3err := jsfn2(
-		js.Undefined(),
-		vm2.ToValue(realroomid),
-		vm2.ToValue(did),
-		vm2.ToValue(timestamp),
-	)
-	if n3err != nil {
-		panic(n3err)
-	}
+	var funcContent2 []string
+	funcContent2 = append(append(funcContent2, strfn4), "sign")
+	result2 := jsUtil.JsRun(funcContent2, realroomid, did, timestamp)
 	param := fmt.Sprintf("%s", result2)
 	realparam := param + "&rate=0"
 	r1, n4err := http.Post("https://www.douyu.com/lapi/live/getH5Play/"+realroomid, "application/x-www-form-urlencoded", strings.NewReader(realparam))
 	if n4err != nil {
-		panic(n4err)
+		return nil
 	}
 	defer r1.Body.Close()
 	body1, _ := io.ReadAll(r1.Body)
