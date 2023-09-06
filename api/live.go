@@ -29,7 +29,7 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
         // 抖音
         douyinobj := &liveurls.Douyin{}
         douyinobj.Rid = rid
-        douyinobj.Stream = utils.DefaultQuery("stream", "flv")
+        douyinobj.Stream = utils.DefaultQuery(r, "stream", "flv")
         http.Redirect(w, r, utils.Duanyan(adurl, douyinobj.GetDouYinUrl()), http.StatusMovedPermanently)
       case "douyu":
         // 斗鱼
