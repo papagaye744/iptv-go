@@ -17,20 +17,6 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
 
   // fmt.Fprintf(w, "request url: %s", path)
 
-  if len(params) == 3 {
-    // 平台
-    platform := params[2]
-    switch platform {
-      case "douyin":
-        // 处理抖音手机直播间
-        vrurl := r.URL.Query().Get("url")
-		    douyinobj := &liveurls.Douyin{}
-		    douyinobj.Shorturl = vrurl
-        http.Redirect(w, r, utils.Duanyan(adurl, douyinobj.GetRealurl()), http.StatusMovedPermanently)
-        return
-    }
-  }
-
   if len(params) >= 4 {
     // 解析成功
     // 平台
@@ -43,6 +29,7 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
         // 抖音
         douyinobj := &liveurls.Douyin{}
         douyinobj.Rid = rid
+        douyinobj.Stream = utils.DefaultQuery(r, "stream", "flv")
         http.Redirect(w, r, utils.Duanyan(adurl, douyinobj.GetDouYinUrl()), http.StatusMovedPermanently)
       case "douyu":
         // 斗鱼
