@@ -117,7 +117,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
             huyaobj.Rid = rid
             huyaobj.Cdn = utils.DefaultQuery(r, "cdn", "HW")
             huyaobj.CdnType = utils.DefaultQuery(r, "cdntype", "nodisplay")
-            if huyaobj.Type == "display" {
+            if huyaobj.CdnType == "display" {
               fmt.Fprintf(w, huyaobj.GetLiveUrl().(string))
             } else {
               http.Redirect(w, r, utils.Duanyan(adurl, huyaobj.GetLiveUrl()), http.StatusMovedPermanently)
