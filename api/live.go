@@ -41,10 +41,9 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
         // 虎牙
         huyaobj := &liveurls.Huya{}
         huyaobj.Rid = rid
-        huyaobj.Cdn = utils.DefaultQuery(r, "cdn", "hwcdn")
-        huyaobj.Media = utils.DefaultQuery(r, "media", "flv")
-        huyaobj.Type = utils.DefaultQuery(r, "type", "nodisplay")
-        if huyaobj.Type == "display" {
+        huyaobj.Cdn = utils.DefaultQuery(r, "cdn", "HW")
+        huyaobj.CdnType = utils.DefaultQuery(r, "cdntype", "nodisplay")
+        if huyaobj.CdnType == "display" {
           fmt.Fprintf(w, huyaobj.GetLiveUrl().(string))
         } else {
           http.Redirect(w, r, utils.Duanyan(adurl, huyaobj.GetLiveUrl()), http.StatusMovedPermanently)
