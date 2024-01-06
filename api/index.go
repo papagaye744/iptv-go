@@ -149,9 +149,9 @@ func Handler(w http.ResponseWriter, r *http.Request) {
       } else {
         log.Println("Invalid path:", path)
         //http.Error(w, "welcome", http.StatusInternalServerError)
-	fmt.Fprintf(w, "<a href='/huyayqk.m3u'>虎牙一起看</a>")
-	fmt.Fprintf(w, "<a href='/douyuyqk.m3u'>斗鱼一起看</a>")
-	fmt.Fprintf(w, "<a href='/yylunbo.m3u'>YY轮播</a>")
+	fmt.Fprintf(w, "<a href='/huyayqk.m3u'>虎牙一起看</a><br>")
+	fmt.Fprintf(w, "<a href='/douyuyqk.m3u'>斗鱼一起看</a><br>")
+	fmt.Fprintf(w, "<a href='/yylunbo.m3u'>YY轮播</a><br>")
 	fmt.Fprintf(w, os.Getenv("LIVE_URL")) 
       }
 		  // log.Println("Invalid path:", path)
