@@ -10,6 +10,7 @@ import (
   "encoding/json"
   "strconv"
   "log"
+  "os"
 )
 
 // vercel 平台会将请求传递给该函数，这个函数名随意，但函数参数必须按照该规则。
