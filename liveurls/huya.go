@@ -1,5 +1,5 @@
 // Package liveurls
-// @Time:2023/02/05 23:34
+// @Time:2024/01/12 22:00
 // @File:huya.go
 // @SoftWare:Goland
 // @Author:feiyang
@@ -12,18 +12,15 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
-	"github.com/hr3lxphr6j/requests"
-	uuid "github.com/satori/go.uuid"
 	"github.com/tidwall/gjson"
-	"math/rand"
+	"io"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
 )
-
-const userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1"
 
 type Huya struct {
 	Rid     string
@@ -31,74 +28,67 @@ type Huya struct {
 	CdnType string
 }
 
-func GetMD5Hash(text string) string {
-	hash := md5.Sum([]byte(text))
-	return hex.EncodeToString(hash[:])
+func MD5(str []byte) string {
+	h := md5.New()
+	h.Write(str)
+	return hex.EncodeToString(h.Sum(nil))
 }
 
-func parseAntiCode(anticode string, uid int64, streamName string) (string, error) {
-	qr, err := url.ParseQuery(anticode)
-	if err != nil {
-		return "", err
-	}
-	qr.Set("ver", "1")
-	qr.Set("sv", "2110211124")
-	qr.Set("seqid", strconv.FormatInt(time.Now().Unix()*1000+uid, 10))
-	qr.Set("uid", strconv.FormatInt(uid, 10))
-	reluuid, _ := uuid.NewV4()
-	qr.Set("uuid", reluuid.String())
-	ss := GetMD5Hash(fmt.Sprintf("%s|%s|%s", qr.Get("seqid"), qr.Get("ctype"), qr.Get("t")))
-	wsTime := strconv.FormatInt(time.Now().Add(6*time.Hour).Unix(), 16)
+func parseAntiCode(antiCode, streamName string) string {
+	qr, _ := url.ParseQuery(antiCode)
+	t := "0"
+	f := strconv.FormatInt(time.Now().UnixNano()/100, 10)
+	wsTime := qr.Get("wsTime")
+
 	decodeString, _ := base64.StdEncoding.DecodeString(qr.Get("fm"))
 	fm := string(decodeString)
-	fm = strings.ReplaceAll(fm, "$0", qr.Get("uid"))
+	fm = strings.ReplaceAll(fm, "$0", t)
 	fm = strings.ReplaceAll(fm, "$1", streamName)
-	fm = strings.ReplaceAll(fm, "$2", ss)
+	fm = strings.ReplaceAll(fm, "$2", f)
 	fm = strings.ReplaceAll(fm, "$3", wsTime)
-	qr.Set("wsSecret", GetMD5Hash(fm))
-	qr.Set("ratio", "0")
-	qr.Set("wsTime", wsTime)
-	return qr.Encode(), nil
+
+	return fmt.Sprintf("wsSecret=%s&wsTime=%s&u=%s&seqid=%s&txyp=%s&fs=%s&sphdcdn=%s&sphdDC=%s&sphd=%s&u=0&t=100&ratio=0",
+		MD5([]byte(fm)), wsTime, t, f, qr.Get("txyp"), qr.Get("fs"), qr.Get("sphdcdn"), qr.Get("sphdDC"), qr.Get("sphd"))
 }
 
 func (h *Huya) GetLiveUrl() any {
-	mobileUrl := "https://m.huya.com/" + h.Rid
-	resp, err := requests.Get(mobileUrl, requests.UserAgent(userAgent))
+	liveurl := "https://m.huya.com/" + h.Rid
+	client := &http.Client{}
+	r, _ := http.NewRequest("GET", liveurl, nil)
+	r.Header.Add("user-agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 16_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Mobile/15E148 Safari/604.1")
+	r.Header.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+	resp, _ := client.Do(r)
+	defer resp.Body.Close()
+	result, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil
 	}
-	if resp.StatusCode != http.StatusOK {
+	reg := regexp.MustCompile("<script> window.HNF_GLOBAL_INIT = (.*)</script>")
+	matches := reg.FindStringSubmatch(string(result))
+	if matches == nil || len(matches) < 2 {
 		return nil
 	}
-	body, err := resp.Text()
-	if err != nil {
-		return nil
-	}
-	tmpStrings := strings.Split(body, `"tLiveInfo":`)
-	if len(tmpStrings) < 2 {
-		return nil
-	}
-	liveInfoJsonRawString := strings.Split(tmpStrings[1], `,"_classname":"LiveRoom.LiveInfo"}`)[0] + "}"
-	if !gjson.Valid(liveInfoJsonRawString) {
-		return nil
-	}
-	liveInfoJson := gjson.Parse(liveInfoJsonRawString)
-	streamInfoJsons := liveInfoJson.Get("tLiveStreamInfo.vStreamInfo.value")
-	if len(streamInfoJsons.Array()) == 0 {
+	return h.extractInfo(matches[1])
+}
+
+func (h *Huya) extractInfo(content string) any {
+	parse := gjson.Parse(content)
+	streamInfo := parse.Get("roomInfo.tLiveInfo.tLiveStreamInfo.vStreamInfo.value")
+	if len(streamInfo.Array()) == 0 {
 		return nil
 	}
 	var cdnSlice []string
 	var finalurl string
-	streamInfoJsons.ForEach(func(key, value gjson.Result) bool {
+	streamInfo.ForEach(func(key, value gjson.Result) bool {
 		var cdnType = gjson.Get(value.String(), "sCdnType").String()
 		cdnSlice = append(cdnSlice, cdnType)
 		if cdnType == h.Cdn {
-			sStreamName := gjson.Get(value.String(), "sStreamName").String()
-			sFlvAntiCode := gjson.Get(value.String(), "sFlvAntiCode").String()
-			sFlvUrl := gjson.Get(value.String(), "sFlvUrl").String()
-			uid := rand.Int63n(99999999999) + 1400000000000
-			query, _ := parseAntiCode(sFlvAntiCode, uid, sStreamName)
-			finalurl = strings.Replace(fmt.Sprintf("%s/%s.flv?%s", sFlvUrl, sStreamName, query), "http://", "https://", 1)
+			urlStr := fmt.Sprintf("%s/%s.%s?%s",
+				value.Get("sFlvUrl").String(),
+				value.Get("sStreamName").String(),
+				value.Get("sFlvUrlSuffix").String(),
+				parseAntiCode(value.Get("sFlvAntiCode").String(), value.Get("sStreamName").String()))
+			finalurl = strings.Replace(urlStr, "http://", "https://", 1)
 		}
 		return true
 	})
