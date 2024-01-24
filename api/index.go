@@ -147,7 +147,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
         }
       } else {
         log.Println("Invalid path:", path)
-        http.Error(w, "链接错误!", http.StatusInternalServerError)
+        // http.Error(w, "链接错误!", http.StatusInternalServerError)
+        fmt.Fprintf(w, "<h1>参数错误!</h1></br><p><a href='https://github.com/youshandefeiyang/LiveRedirect/blob/main/Golang/README.md'>使用教程</a></p>")
       }
 		  // log.Println("Invalid path:", path)
 		  // fmt.Fprintf(w, "<h1>链接错误!</h1>")

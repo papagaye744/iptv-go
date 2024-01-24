@@ -11,6 +11,10 @@
     {
       "src": "/.*",
       "dest": "/api/index.go"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "https://assets.vercel.com/image/upload/front/favicon/vercel/favicon.ico"
     }
   ]
 }
