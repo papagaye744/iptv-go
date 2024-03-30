@@ -11,6 +11,9 @@
 
 [![Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/papagaye744/iptv-go)
 
+新版vercel新建项目默认是node20.x的环境会提示部署失败，虽然加了`package.json`指定为18.x但是貌似没用，如果遇到部署失败的先去设置修改node为18.x
+![Vercel设置Nodejs环境](.github/asserts/nodejs.png)
+
 ### ~~方式二~~
 
 <details>
