@@ -68,7 +68,7 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
 
 		i := 1
 		for {
-			apiRes := yylistobj.Yylb(fmt.Sprintf("https://rubiks-idx.yy.com/nav/other/pnk1/448772?channel=appstore&compAppid=yymip&exposured=80&hdid=8dce117c5c963bf9e7063e7cc4382178498f8765&hostVersion=8.25.0&individualSwitch=1&ispType=2&netType=2&openCardLive=1&osVersion=16.5&page=%d&stype=2&supportSwan=0&uid=1834958700&unionVersion=0&y0=8b799811753625ef70dbc1cc001e3a1f861c7f0261d4f7712efa5ea232f4bd3ce0ab999309cac0d7869449a56b44c774&y1=8b799811753625ef70dbc1cc001e3a1f861c7f0261d4f7712efa5ea232f4bd3ce0ab999309cac0d7869449a56b44c774&y11=9c03c7008d1fdae4873436607388718b&y12=9d8393ec004d98b7e20f0c347c3a8c24&yv=1&yyVersion=8.25.0", i))
+			apiRes := yylistobj.Yylb(fmt.Sprintf("http://rubiks-ipad.yy.com/nav/other/idx/213?channel=appstore&ispType=0&model=iPad8,6&netType=2&os=iOS&osVersion=17.2&page=%d&uid=0&yyVersion=6.17.0", i))
 			var res list.ApiResponse
 			json.Unmarshal([]byte(apiRes), &res)
 			for _, value := range res.Data.Data {
