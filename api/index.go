@@ -13,12 +13,7 @@ import (
   "github.com/gin-gonic/gin"	
 )
 
-// @schemes https http
-// @host golang-vercel.vercel.app
-func init() {
-	app = gin.New()
-	routes.Register(app)
-}
+
 
 // vercel 平台会将请求传递给该函数，这个函数名随意，但函数参数必须按照该规则。
 func Handler(w http.ResponseWriter, r *http.Request) {
