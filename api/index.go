@@ -97,14 +97,17 @@ func Handler(w http.ResponseWriter, r *http.Request) {
         platform := params[1]
         // 房间号
         rid := params[2]
+	enableTV := true
+	ts := utils.DefaultQuery(r,"ts","")
         // fmt.Fprintf(w, "parsed platform=%s, room=%s", platform, rid)
         switch platform {
+		
 		case "itv":
 			if enableTV {
 				itvobj := &liveurls.Itv{}
 				cdn := utils.DefaultQuery(r, "cdn", "")
 				if ts == "" {
-					itvobj.HandleMainRequest(c, cdn, rid)
+					itvobj.HandleMainRequest(w, cdn, rid)
 				} else {
 					itvobj.HandleTsRequest(w, ts)
 				}
@@ -115,7 +118,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			if enableTV {
 				ysptpobj := &liveurls.Ysptp{}
 				if ts == "" {
-					ysptpobj.HandleMainRequest(c, rid)
+					ysptpobj.HandleMainRequest(w, rid)
 				} else {
 					ysptpobj.HandleTsRequest(w, ts, utils.DefaultQuery(r,"wsTime",""))
 				}
