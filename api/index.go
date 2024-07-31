@@ -97,37 +97,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
         platform := params[1]
         // 房间号
         rid := params[2]
-	enableTV := true
-	ts := utils.DefaultQuery(r,"ts","")
         // fmt.Fprintf(w, "parsed platform=%s, room=%s", platform, rid)
         switch platform {
-		
-		case "itv":
-			if enableTV {
-				itvobj := &liveurls.Itv{}
-				cdn := utils.DefaultQuery(r, "cdn", "")
-				if ts == "" {
-					itvobj.HandleMainRequest(w, cdn, rid)
-				} else {
-					itvobj.HandleTsRequest(w, ts)
-				}
-			} else {
-				c.String(http.StatusForbidden, "公共服务不提供TV直播")
-			}
-		case "ysptp":
-			if enableTV {
-				ysptpobj := &liveurls.Ysptp{}
-				if ts == "" {
-					ysptpobj.HandleMainRequest(w, rid)
-				} else {
-					ysptpobj.HandleTsRequest(w, ts, utils.DefaultQuery(r,"wsTime",""))
-				}
-			} else {
-				c.String(http.StatusForbidden, "公共服务不提供TV直播")
-			}
-
-
-		
           case "douyin":
             // 抖音
             douyinobj := &liveurls.Douyin{}
@@ -179,7 +150,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
         log.Println("Invalid path:", path)
         w.Header().Set("Content-Type", "text/html; charset=utf-8")
         // http.Error(w, "链接错误!", http.StatusInternalServerError)
-	fmt.Fprintf(w, "</br><p><a href='/huyayqk.m3u'>虎牙一起看</a></p>")
         fmt.Fprintf(w, "<h1>参数错误!</h1></br><p><a href='https://github.com/youshandefeiyang/LiveRedirect/blob/main/Golang/README.md'>使用教程</a></p>")
       }
 		  // log.Println("Invalid path:", path)
