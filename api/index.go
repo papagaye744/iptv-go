@@ -16,10 +16,9 @@ import (
 
 
 // vercel 平台会将请求传递给该函数，这个函数名随意，但函数参数必须按照该规则。
-func Handler(w http.ResponseWriter, r *http.Request) {
-  
-
-  gin.SetMode(gin.ReleaseMode)
+func Handler(w http.ResponseWriter, k *http.Request) {
+	enableTV = true
+ 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
 	r.HEAD("/", func(c *gin.Context) {
