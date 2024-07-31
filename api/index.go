@@ -1,16 +1,18 @@
 package handler
  
 import (
-  "Golang/liveurls"
-  "Golang/list"
-  "Golang/utils"
-  "fmt"
-  "net/http"
-  "strings"
-  "encoding/json"
-  "strconv"
-  "log"
-  "github.com/gin-gonic/gin"	
+	"Golang/list"
+	"Golang/liveurls"
+	"encoding/base64"
+	"encoding/json"
+	"flag"
+	"fmt"
+	"github.com/forgoer/openssl"
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"net/url"
+	"strconv"
+	"time"
 )
 
 func duanyan(adurl string, realurl any) string {
@@ -46,6 +48,7 @@ func getLivePrefix(c *gin.Context) string {
 
 // vercel 平台会将请求传递给该函数，这个函数名随意，但函数参数必须按照该规则。
 func Handler(w http.ResponseWriter, k *http.Request) {
+	adurl := "http://159.75.85.63:5680/d/ad/roomad/playlist.m3u8"
 	enableTV := true
  	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
