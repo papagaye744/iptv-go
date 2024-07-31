@@ -30,7 +30,7 @@ type Youtube struct {
 }
 
 func (y *Youtube) GetLiveUrl() any {
-	if cached, ok := get(y.Rid); ok {
+	if cached, ok := getKey(y.Rid); ok {
 		return cached
 	}
 	//proxyUrl, err := url.Parse("http://127.0.0.1:8888")
@@ -99,22 +99,22 @@ func (y *Youtube) getResolution(liveurl string) *string {
 	}
 
 	if stream, ok := mapping[y.Quality]; ok {
-		set(y.Rid, stream, 600)
+		setKey(y.Rid, stream, 600)
 		return &stream
 	}
 
 	stream := playlists[len(playlists)-1].URI
-	set(y.Rid, stream, 600)
+	setKey(y.Rid, stream, 600)
 	return &stream
 }
 
-func set(key string, data interface{}, timeout int) {
+func setKey(key string, data interface{}, timeout int) {
 	streamCachedMap.Store(key, data)
 	time.AfterFunc(time.Second*time.Duration(timeout), func() {
 		streamCachedMap.Delete(key)
 	})
 }
 
-func get(key string) (interface{}, bool) {
+func getKey(key string) (interface{}, bool) {
 	return streamCachedMap.Load(key)
 }
