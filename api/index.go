@@ -211,5 +211,5 @@ func Handler(w http.ResponseWriter, k *http.Request) {
 			c.Redirect(http.StatusMovedPermanently, duanyan(adurl, yyObj.GetLiveUrl()))
 		}
 	})
-	return r
+	return 
 }
