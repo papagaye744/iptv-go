@@ -10,12 +10,26 @@ import (
   "encoding/json"
   "strconv"
   "log"
+  "os"
 )
 
 // vercel 平台会将请求传递给该函数，这个函数名随意，但函数参数必须按照该规则。
 func Handler(w http.ResponseWriter, r *http.Request) {
+  // 是否禁用TV
+  enableTV := os.Getenv("TV") != "false" 
   path := r.URL.Path
+  ts := utils.DefaultQuery(r, "ts", "")
 	switch path {
+    // 电视直播
+    case "/tv.m3u":
+      if enableTV {
+        itvm3uobj := &list.Tvm3u{}
+        w.Header().Set("Content-Type", "application/octet-stream")
+        w.Header().Set("Content-Disposition", "attachment; filename=tv.m3u")
+        itvm3uobj.GetTvM3u(w, r.Host)
+      } else {
+        http.Error(w, "公共服务不提供TV直播", http.StatusForbidden)
+      }
     // 虎牙一起看
     case "/huyayqk.m3u":
       yaobj := &list.HuyaYqk{}
@@ -86,7 +100,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
       }
     // 其他链接
 	  default:
-      adurl := "http://159.75.85.63:5680/d/ad/roomad/playlist.m3u8"
+      adurl := "https://cdn.jsdelivr.net/gh/feiyangdigital/testvideo/sdr1080pvideo/index.m3u8"
       params := strings.Split(path, "/")
 
       // log.Println("request url: ", path)
@@ -99,6 +113,29 @@ func Handler(w http.ResponseWriter, r *http.Request) {
         rid := params[2]
         // fmt.Fprintf(w, "parsed platform=%s, room=%s", platform, rid)
         switch platform {
+          case "itv":
+            if enableTV {
+              itvobj := &liveurls.Itv{}
+              cdn := utils.DefaultQuery(r, "cdn", "")
+              if ts == "" {
+                itvobj.HandleMainRequest(w, r, cdn, rid)
+              } else {
+                itvobj.HandleTsRequest(w, ts)
+              }
+            } else {
+              http.Error(w, "公共服务不提供TV直播", http.StatusForbidden)
+            }
+          case "ysptp":
+            if enableTV {
+              ysptpobj := &liveurls.Ysptp{}
+              if ts == "" {
+                ysptpobj.HandleMainRequest(w, r, rid)
+              } else {
+                ysptpobj.HandleTsRequest(w, ts, utils.DefaultQuery(r, "wsTime", ""))
+              }
+            } else {
+              http.Error(w, "公共服务不提供TV直播", http.StatusForbidden)
+            }
           case "douyin":
             // 抖音
             douyinobj := &liveurls.Douyin{}
