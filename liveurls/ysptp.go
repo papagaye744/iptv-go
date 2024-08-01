@@ -1,6 +1,7 @@
 package liveurls
 
 import (
+	"Golang/utils"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -8,7 +9,6 @@ import (
 	"strings"
 	"sync"
 	"time"
-	"Golang/utils"
 )
 
 type Ysptp struct{}
@@ -54,7 +54,7 @@ var cctvList = map[string]string{
 }
 
 func (y *Ysptp) HandleMainRequest(w http.ResponseWriter, r *http.Request, id string) {
-	uid := tils.DefaultQuery(r, "uid", "1234123122")
+	uid := utils.DefaultQuery(r, "uid", "1234123122")
 
 	if _, ok := cctvList[id]; !ok {
 		http.Error(w, "id not found!", http.StatusNotFound)
