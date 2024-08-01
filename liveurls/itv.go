@@ -222,7 +222,7 @@ type cacheEntry struct {
 	expiry time.Time
 }
 
-func (i *Itv) HandleMainRequest(w http.ResponseWriter, r *http.Request, cdn, id string) {
+func (i *Itv) HandleMainRequest(w http.ResponseWriter, r *http.Request, cdn string, id string) {
 	key := cdn + "/" + id
 	url, ok := programList[key]
 	if !ok {
