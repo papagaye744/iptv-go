@@ -35,7 +35,7 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
           itvobj := &liveurls.Itv{}
           cdn := utils.DefaultQuery(r, "cdn", "")
           if ts == "" {
-            itvobj.HandleMainRequest(w, r cdn, rid)
+            itvobj.HandleMainRequest(w, r, cdn, rid)
           } else {
             itvobj.HandleTsRequest(w, ts)
           }
