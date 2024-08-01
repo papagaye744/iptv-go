@@ -222,7 +222,7 @@ type cacheEntry struct {
 	expiry time.Time
 }
 
-func (i *Itv) HandleMainRequest(w http.ResponseWriter, cdn, id string) {
+func (i *Itv) HandleMainRequest(w http.ResponseWriter, r *http.Request, cdn, id string) {
 	key := cdn + "/" + id
 	url, ok := programList[key]
 	if !ok {
@@ -238,7 +238,7 @@ func (i *Itv) HandleMainRequest(w http.ResponseWriter, cdn, id string) {
 	redirectPrefix := redirectURL[:strings.LastIndex(redirectURL, "/")+1]
 
 	// 替换TS文件的链接
-	golang := "http://" + c.Request.Host + c.Request.URL.Path
+	golang := "http://" + r.Host + r.URL.Path
 	re := regexp.MustCompile(`((?i).*?\.ts)`)
 	data = re.ReplaceAllStringFunc(data, func(match string) string {
 		return golang + "?ts=" + redirectPrefix + match

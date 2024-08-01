@@ -8,6 +8,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"Golang/utils"
 )
 
 type Ysptp struct{}
@@ -52,17 +53,17 @@ var cctvList = map[string]string{
 	"cctv8k_120m.m3u8":  "http://liveali-tp4k.cctv.cn/live/8K120M/playlist.m3u8,http://liveali-tp4k.cctv.cn/live/8K120M/",
 }
 
-func (y *Ysptp) HandleMainRequest(w http.ResponseWriter, id string) {
-	uid := c.DefaultQuery("uid", "1234123122")
+func (y *Ysptp) HandleMainRequest(w http.ResponseWriter, r *http.Request, id string) {
+	uid := tils.DefaultQuery(r, "uid", "1234123122")
 
 	if _, ok := cctvList[id]; !ok {
-		c.String(http.StatusNotFound, "id not found!")
+		http.Error(w, "id not found!", http.StatusNotFound)
 		return
 	}
 
 	urls := strings.Split(cctvList[id], ",")
 	data := getURL(id, urls[0], uid, urls[1])
-	golang := "http://" + c.Request.Host + c.Request.URL.Path
+	golang := "http://" + r.Host + r.URL.Path
 	re := regexp.MustCompile(`((?i).*?\.ts)`)
 	data = re.ReplaceAllString(data, golang+"?ts="+urls[1]+"$1")
 

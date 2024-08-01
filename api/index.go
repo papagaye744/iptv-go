@@ -118,9 +118,9 @@ func Handler(w http.ResponseWriter, r *http.Request) {
               itvobj := &liveurls.Itv{}
               cdn := utils.DefaultQuery(r, "cdn", "")
               if ts == "" {
-                itvobj.HandleMainRequest(c, cdn, rid)
+                itvobj.HandleMainRequest(w, r, cdn, rid)
               } else {
-                itvobj.HandleTsRequest(c, ts)
+                itvobj.HandleTsRequest(w, ts)
               }
             } else {
               http.Error(w, "公共服务不提供TV直播", http.StatusForbidden)
@@ -129,9 +129,9 @@ func Handler(w http.ResponseWriter, r *http.Request) {
             if enableTV {
               ysptpobj := &liveurls.Ysptp{}
               if ts == "" {
-                ysptpobj.HandleMainRequest(c, rid)
+                ysptpobj.HandleMainRequest(w, r, rid)
               } else {
-                ysptpobj.HandleTsRequest(c, ts, utils.DefaultQuery(r, "wsTime", ""))
+                ysptpobj.HandleTsRequest(w, ts, utils.DefaultQuery(r, "wsTime", ""))
               }
             } else {
               http.Error(w, "公共服务不提供TV直播", http.StatusForbidden)
