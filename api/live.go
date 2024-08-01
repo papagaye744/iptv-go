@@ -7,13 +7,17 @@ import (
   "net/http"
   "strings"
   "log"
+  "os"
 )
 
 // vercel 平台会将请求传递给该函数，这个函数名随意，但函数参数必须按照该规则。
 func Handler(w http.ResponseWriter, r *http.Request)  {
-  adurl := "http://159.75.85.63:5680/d/ad/roomad/playlist.m3u8"
+  adurl := "https://cdn.jsdelivr.net/gh/feiyangdigital/testvideo/sdr1080pvideo/index.m3u8"
   path := r.URL.Path
   params := strings.Split(path, "/")
+
+  // 是否禁用TV
+  enableTV := os.Getenv("TV") != "false" 
 
   // fmt.Fprintf(w, "request url: %s", path)
 
@@ -23,8 +27,32 @@ func Handler(w http.ResponseWriter, r *http.Request)  {
     platform := params[2]
     // 房间号
     rid := params[3]
+    ts := utils.DefaultQuery(r, "ts", "")
     // fmt.Fprintf(w, "parsed platform=%s, room=%s", platform, rid)
     switch platform {
+      case "itv":
+        if enableTV {
+          itvobj := &liveurls.Itv{}
+          cdn := utils.DefaultQuery(r, "cdn", "")
+          if ts == "" {
+            itvobj.HandleMainRequest(c, cdn, rid)
+          } else {
+            itvobj.HandleTsRequest(c, ts)
+          }
+        } else {
+          http.Error(w, "公共服务不提供TV直播", http.StatusForbidden)
+        }
+      case "ysptp":
+        if enableTV {
+          ysptpobj := &liveurls.Ysptp{}
+          if ts == "" {
+            ysptpobj.HandleMainRequest(c, rid)
+          } else {
+            ysptpobj.HandleTsRequest(c, ts, utils.DefaultQuery(r, "wsTime", ""))
+          }
+        } else {
+          http.Error(w, "公共服务不提供TV直播", http.StatusForbidden)
+        }
       case "douyin":
         // 抖音
         douyinobj := &liveurls.Douyin{}
